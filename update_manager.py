@@ -3,7 +3,6 @@ import consts
 import os
 import config_manager
 import pathlib
-import py7zr
 
 from ftplib import FTP
 
@@ -48,7 +47,7 @@ def get_modpack_version(modpack_id: str) -> int:
 
 def download_file(local_path: str, server_path: str, ftp: FTP) -> int:
     print(f"Пытаюсь получить файл: /{server_path}")
-
+    if os.path.exists(local_path): os.remove(local_path)
     try:
         with open(local_path, "wb") as file:
             ftp.retrbinary(f"RETR {server_path}", file.write)
@@ -77,29 +76,11 @@ def post_update(modpack_id: str):
         os.remove(f"{modpack_path}/{consts.UPD_CONFIG_NAME}")
 
 
-def unzip_update(modpack_id: str) -> int:
-    update_archive_file_name = consts.UPDATE_ARCHIVE_FILE_NAME
-    extract_path = f"{current_directory}/{consts.MODPACKS_FOLDER_NAME}/{modpack_id}/"
-    if os.path.exists(update_archive_file_name):
-        if not os.path.exists(extract_path): os.makedirs(extract_path)
-        print("Пытаюсь распокавать архив: " + update_archive_file_name)
-        try:
-            with py7zr.SevenZipFile(update_archive_file_name, 'r') as f:
-                f.extractall(extract_path)
-            print("Успешно!")
-            return 0
-        except Exception as E:
-            print(E)
-            print("Ошибка при распоковке")
-    return 1
-
-
 def install_update(modpack_id: str, update_pkg: str, ftp: FTP) -> int:
     ret = download_file(consts.UPDATE_ARCHIVE_FILE_NAME, f"{consts.MODPACKS_FOLDER_NAME}/{modpack_id}/{update_pkg}",
                         ftp)
     if ret == 0:
-        unzip_update(modpack_id)
-        os.remove(consts.UPDATE_ARCHIVE_FILE_NAME)
+        os.system(f"C:\\Program Files\\7-Zip\\7zFM.exe {current_directory}\\{consts.UPDATE_ARCHIVE_FILE_NAME}")
         return 0
     return 1
 
@@ -115,16 +96,3 @@ def check_update(modpack_id: str, ftp: FTP) -> str:
                 if version > curr_version:
                     return update_pkg
     return None
-
-
-def main():
-    ftp = create_ftp(consts.UPDATE_DOMAIN, consts.UPDATE_PORT, consts.UPDATE_USER, consts.UPDATE_PASSWORD)
-    if ftp is not None:
-        update_pkg = check_update("prikol", ftp)
-        if update_pkg is not None:
-            ret = install_update("prikol", update_pkg, ftp)
-            if ret == 0:
-                post_update("prikol")
-
-
-if __name__ == "__main__": main()

@@ -18,6 +18,7 @@ LNC_CONFIG_NAME = "launcher_config.json"
 LOADERS = [
     "forge",
     "fabric",
+    "neoforge"
 ]
 
 DEFAULT_CONFIG = {

@@ -332,11 +332,6 @@ class FLauncherWindow(QMainWindow):
             else:
                 self.settings_ui_window.lineEditJavaArgs.setText(DEFAULT_CONFIG.get("java_args"))
 
-        if os.path.exists(modpack_banner_path):
-            self.settings_ui_window.top_image.setPixmap(QPixmap(modpack_banner_path))
-        else:
-            self.settings_ui_window.top_image.setPixmap(QPixmap(DEFAULT_BANNER_FILE))
-
         modpack_title_name = get_title_name_none(modpack_name)
         if modpack_title_name is not None: self.settings_ui_window.lineEditVisualName.setText(modpack_title_name)
 

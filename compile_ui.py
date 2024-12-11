@@ -10,11 +10,11 @@ compile_cmds_nt = [
 ]
 
 compile_cmds_linux = [
-    f"pyuic5 -x create_modpack_window.ui -o {current_directory}/window_create.py",
+    #f"pyuic5 -x create_modpack_window.ui -o {current_directory}/window_create.py",
     f"pyuic5 -x main_window.ui -o {current_directory}/window.py",
     f"pyuic5 -x settings_window.ui -o {current_directory}/window_settings.py",
-    f"pyuic5 -x log_window.ui -o {current_directory}/window_log.py",
-    f"pyuic5 -x download_window.ui -o {current_directory}/window_download.py",
+    #f"pyuic5 -x log_window.ui -o {current_directory}/window_log.py",
+    #f"pyuic5 -x download_window.ui -o {current_directory}/window_download.py",
 ]
 
 def main():
