@@ -2,6 +2,7 @@ import os
 import subprocess
 import threading
 import consts
+import antihash_manager
 
 from system_manager import is_process_running, kill_process_by_name, is_windows
 
@@ -33,6 +34,25 @@ def run_mc(config: dict, client_dir: str) -> bool:
 
     if not is_process_running(process_mc_name) or not is_windows():
         new_config = get_config_data(config)
+
+        #anti hash mod system
+        if os.path.exists(f"{client_dir}/versions/hash_sums.sha1"):
+            with open(f"{client_dir}/versions/hash_sums.sha1", 'r') as hash_file:
+                lines = hash_file.readlines()
+                hashes = []
+                for line in lines: hashes.append(line.strip())
+
+                mods_file_folder = f"{client_dir}/mods"
+                if os.path.exists(mods_file_folder):
+                    mods_files = os.listdir(mods_file_folder)
+                    mods = [f for f in mods_files if os.path.isfile(os.path.join(mods_file_folder, f))]
+
+                    for mod in mods:
+                        status = antihash_manager.check_sums_sha1(f"{client_dir}/mods/{mod}",hashes)
+                        print(f"Мод: {mod}, статус: {status}")
+                        if not status:
+                            os.remove(f"{client_dir}/mods/{mod}")
+
 
         mc_run_cmd = f"portablemc --main-dir {client_dir} --work-dir {client_dir} start \"{new_config.get("java_args")}\" {new_config.get("loader")}:{new_config.get("version")} -u {new_config.get("username")}"
         try:
