@@ -80,7 +80,7 @@ def install_update(modpack_id: str, update_pkg: str, ftp: FTP) -> int:
     ret = download_file(consts.UPDATE_ARCHIVE_FILE_NAME, f"{consts.MODPACKS_FOLDER_NAME}/{modpack_id}/{update_pkg}",
                         ftp)
     if ret == 0:
-        os.system(f"C:\\Program Files\\7-Zip\\7zFM.exe {current_directory}\\{consts.UPDATE_ARCHIVE_FILE_NAME}")
+        os.system(f"\"C:\\Program Files\\7-Zip\\7zFM.exe\" {current_directory}\\{consts.UPDATE_ARCHIVE_FILE_NAME}")
         return 0
     return 1
 
